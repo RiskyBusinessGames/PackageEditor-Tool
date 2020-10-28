@@ -70,6 +70,11 @@ namespace RiskyBusiness.Tools
 
             _version = _packageVersion;
 
+            SetVersionContainerValues();
+        }
+
+        private void SetVersionContainerValues()
+        {
             // Convert the string version and update the int array for versions
             string[] versionParts = _version.Split('.');
             for (var i = 0; i < versionParts.Length; i++)
@@ -159,8 +164,16 @@ namespace RiskyBusiness.Tools
         [Button]
         public void LoadLog()
         {
-            string fileContents = File.ReadAllText(_changeLogPath);
-            _changeLog = fileContents;
+            try
+            {
+                string fileContents = File.ReadAllText(_changeLogPath);
+                // Load the change log contexts into the text area for editing
+                _changeLog = fileContents;
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Couldn't load file, caught exception: {exception}");
+            }
         }
         
         [PropertyOrder(3)]
@@ -179,7 +192,15 @@ namespace RiskyBusiness.Tools
 
             if (state)
             {
-                File.WriteAllText(_changeLogPath, _changeLog);
+                try
+                {
+                    File.WriteAllText(_changeLogPath, _changeLog);
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"Couldn't write to file, caught exception: {exception}");
+                }
+
             }
         }
         #endregion
@@ -201,7 +222,7 @@ namespace RiskyBusiness.Tools
 
             if (state)
             {
-                string command = @"npm version " + _versionType.ToString().ToLower();
+                var command = $@"npm version {_versionType.ToString().ToLower()}";
                 ExecuteCommand(command);
             }
         }
@@ -219,22 +240,29 @@ namespace RiskyBusiness.Tools
                 ExecuteCommand("npm publish");
             }
         }
-        
+
         private void UpdateVersionString(int index)
         {
             _versionContainer[index]++;
-            if (index == 0)
-            {
-                _versionContainer[1] = 0;
-                _versionContainer[2] = 0;
-            }
             
-            if (index == 1)
+            // Reset the lower parts of the version string if major or minor
+            switch (index)
             {
-                _versionContainer[2] = 0;
+                case 0:
+                    _versionContainer[1] = 0;
+                    _versionContainer[2] = 0;
+                    break;
+                case 1:
+                    _versionContainer[2] = 0;
+                    break;
             }
-            
-            for (int i = 0; i < _versionContainer.Length; i++)
+
+            BuildVersionString();
+        }
+
+        private void BuildVersionString()
+        {
+            for (var i = 0; i < _versionContainer.Length; i++)
             {
                 _stringBuilder.Append(_versionContainer[i]);
 
@@ -250,8 +278,33 @@ namespace RiskyBusiness.Tools
         
         private void ExecuteCommand(string command)
         {
-            string fileName = Path.GetFileName(_packagePath);
+            string executingDirectory = GetExecutingDirectory();
+            if (executingDirectory == string.Empty)
+            {
+                Debug.LogError($"No executing directory could be created, aborting: {command}");
+                return;
+            }
             
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/k {command}",
+                WorkingDirectory = executingDirectory,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            
+            };
+
+            Process process = Process.Start(processInfo);
+            process?.WaitForExit();
+        
+            LoadPackageJson();
+        }
+
+        private string GetExecutingDirectory()
+        {
+            string fileName = Path.GetFileName(_packagePath);
+
             if (_packagePath != null)
             {
                 if (fileName != string.Empty)
@@ -259,23 +312,11 @@ namespace RiskyBusiness.Tools
                     string directoryPath = _packagePath.Replace(fileName, "");
                     directoryPath = directoryPath.Replace("Assets/", "");
                     var executingDirectory = $"{Application.dataPath}/{directoryPath}";
-
-                    var processInfo = new ProcessStartInfo
-                    {
-                        FileName = "cmd.exe",
-                        Arguments = $"/k {command}",
-                        WorkingDirectory = executingDirectory,
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    
-                    };
-
-                    Process process = Process.Start(processInfo);
-                    process?.WaitForExit();
-                
-                    LoadPackageJson();
+                    return executingDirectory;
                 }
             }
+
+            return string.Empty;
         }
         
         #endregion
