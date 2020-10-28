@@ -48,12 +48,12 @@ namespace RiskyBusiness.Tools
         
         #region Package JSON
         
-        [PropertyOrder(-10)]
+        [PropertyOrder(1)]
         [HorizontalGroup("Group -1"), LabelWidth(85)]
         [Sirenix.OdinInspector.FilePath(Extensions = "json")]
         [SerializeField] private string _packagePath;
 
-        [PropertyOrder(-10)]
+        [PropertyOrder(1)]
         [HorizontalGroup("Group -1"), LabelWidth(85)]
         [DisableIf("@this._packagePath == string.Empty")]
         [Button]
@@ -87,27 +87,27 @@ namespace RiskyBusiness.Tools
             }
         }
 
-        [PropertyOrder(-9)]
+        [PropertyOrder(2)]
         [BoxGroup("Package JSON Contents", centerLabel: true)] 
         [ReadOnly]
         [SerializeField] private string _packageName;
 
-        [PropertyOrder(-9)]
+        [PropertyOrder(2)]
         [BoxGroup("Package JSON Contents", centerLabel: true)] 
         [ReadOnly]
         [SerializeField] private string _packageVersion;
         
-        [PropertyOrder(-9)]
+        [PropertyOrder(2)]
         [BoxGroup("Package JSON Contents", centerLabel: true)] 
         [ReadOnly]
         [SerializeField] private string _description;
         
-        [PropertyOrder(-9)]
+        [PropertyOrder(2)]
         [BoxGroup("Package JSON Contents", centerLabel: true)] 
         [ReadOnly]
         [SerializeField] private string _author;
         
-        [PropertyOrder(-9)]
+        [PropertyOrder(2)]
         [BoxGroup("Package JSON Contents", centerLabel: true)] 
         [ReadOnly]
         [SerializeField] private string _licence;
@@ -116,11 +116,11 @@ namespace RiskyBusiness.Tools
 
         #region Package Version
         
-        [PropertyOrder(0)]
+        [PropertyOrder(3)]
         [PropertySpace(8)]
         [SerializeField] private string _version = "1.0.0";
         
-        [PropertyOrder(1)]
+        [PropertyOrder(3)]
         [HorizontalGroup("Group 1"), LabelWidth(15)]
         [Button]
         public void MajorVersion()
@@ -129,7 +129,7 @@ namespace RiskyBusiness.Tools
             UpdateVersionString(0);
         }
         
-        [PropertyOrder(1)]
+        [PropertyOrder(3)]
         [HorizontalGroup("Group 1"), LabelWidth(15)]
         [Button]
         public void MinorVersion()
@@ -138,7 +138,7 @@ namespace RiskyBusiness.Tools
             UpdateVersionString(1);
         }
         
-        [PropertyOrder(1)]
+        [PropertyOrder(3)]
         [HorizontalGroup("Group 1"), LabelWidth(15)]
         [Button]
         public void PatchVersion()
@@ -151,13 +151,13 @@ namespace RiskyBusiness.Tools
 
         #region Package ChangeLog
         
-        [PropertyOrder(2)]
+        [PropertyOrder(4)]
         [PropertySpace(16)]
         [HorizontalGroup("Group 2"), LabelWidth(100)]
         [Sirenix.OdinInspector.FilePath(Extensions = "md")]
         [SerializeField] private string _changeLogPath;
 
-        [PropertyOrder(2)]
+        [PropertyOrder(4)]
         [PropertySpace(16)]
         [HorizontalGroup("Group 2")]
         [DisableIf("@this._changeLogPath == string.Empty")]
@@ -176,7 +176,7 @@ namespace RiskyBusiness.Tools
             }
         }
         
-        [PropertyOrder(3)]
+        [PropertyOrder(4)]
         [PropertySpace(16)]
         [TextArea(10, 15)]
         [HideLabel]
