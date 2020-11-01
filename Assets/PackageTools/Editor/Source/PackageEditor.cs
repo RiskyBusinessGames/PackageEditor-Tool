@@ -270,14 +270,23 @@ namespace RiskyBusiness.Packages.Tooling
                 return;
             }
             
-            var processInfo = new ProcessStartInfo
+            // 
+
+            string applicationName = string.Empty;
+#if UNITY_EDITOR_OSX
+            applicationName = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
+
+#elif UNITY_EDITOR_64
+            applicationName = "cmd.exe";
+# endif
+            
+            ProcessStartInfo processInfo = new ProcessStartInfo
             {
-                FileName = "cmd.exe",
+                FileName = applicationName,
                 Arguments = $"/k {command}",
                 WorkingDirectory = executingDirectory,
                 CreateNoWindow = true,
                 UseShellExecute = false
-            
             };
 
             Process process = Process.Start(processInfo);
