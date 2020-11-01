@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using System.IO;
+using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +17,7 @@ namespace RiskyBusiness.Packages.Tooling
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
-        [SerializeField] private string _packageName;
+        [SerializeField] private string _packageName = "";
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
@@ -23,11 +25,11 @@ namespace RiskyBusiness.Packages.Tooling
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
-        [SerializeField] private string _displayName;
+        [SerializeField] private string _displayName = "";
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
-        [SerializeField] private string _description;
+        [SerializeField] private string _description = "";
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
@@ -39,12 +41,54 @@ namespace RiskyBusiness.Packages.Tooling
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
-        [SerializeField] private string _author;
+        [SerializeField] private string _author = "";
         
-        [PropertyOrder(1)]
-        [HorizontalGroup("Group 1"), LabelWidth(85)]
-        [Sirenix.OdinInspector.FilePath(Extensions = "json")]
-        [SerializeField] private string _packagePath;
+        [PropertyOrder(2)]
+        [FolderPath(RequireExistingPath = true)]
+        [SerializeField] private string _packageDirectory;
+
+        [PropertyOrder(2)]
+        [Button]
+        [DisableIf("@this._packageDirectory == string.Empty")]
+        public void CreatePackageJSON()
+        {
+            Debug.Log(_packageDirectory);
+
+            if (_packageDirectory != string.Empty)
+            {
+                var packageModel = new PackageModel
+                {
+                    name = _packageName,
+                    version = _version,
+                    displayName = _displayName,
+                    description = _description,
+                    unity = _unity,
+                    unityRelease = _unityRelease,
+                    author = _author
+                };
+
+                string packageJSON = JsonUtility.ToJson(packageModel);
+
+                string packagePath = Path.Combine(_packageDirectory, $"package.json");
+
+                bool state = EditorUtility.DisplayDialog("Create Package JSON?",
+                    "Are you sure you want to create a new package file, it will override the existing package.json file.?", "Yes","No");
+
+                if (state)
+                {
+                    try
+                    {
+                        File.WriteAllText(packagePath, packageJSON);
+                        AssetDatabase.Refresh();
+                    }
+                    catch (Exception exception)
+                    {
+                        Debug.Log($"Exception Caught when writing to file: {exception}");
+                        throw;
+                    }
+                }
+            }
+        }
     }
 }
 
