@@ -8,23 +8,8 @@ using UnityEngine;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 
-namespace RiskyBusiness.Tools
+namespace RiskyBusiness.Packages.Tooling
 {
-    [Serializable]
-    public class PackageModel
-    {
-        public string name;
-        public string version;
-        public string description;
-        public string author;
-        public string license;
-
-        public override string ToString()
-        {
-            return JsonUtility.ToJson(this);
-        }
-    }
-
     public enum VersionType
     {
         Major,
@@ -40,7 +25,7 @@ namespace RiskyBusiness.Tools
         private readonly int[] _versionContainer = {1, 0, 0};
         private readonly StringBuilder _stringBuilder = new StringBuilder(12);
         
-        [MenuItem("Tools/Package Editor")]
+        [MenuItem("RiskyBusinessGames/Tools/Package Editor")]
         private static void OpenWindow()
         {
             GetWindow<PackageEditor>().Show();
