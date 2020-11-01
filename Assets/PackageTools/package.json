@@ -1,1 +1,19 @@
-{"name":"Package Tools","version":"1.0.0","displayName":"Package Tools","description":"These package tools make it more convenient to work with packages.","unity":"2020.1","unityRelease":"1f1","author":"RiskyBusinessGames","license":""}
+{
+  "name": "com.riskybusinessgames.packagetools",
+  "version": "2.0.0",
+  "displayName": "Package Tools",
+  "description": "These package tools make it more convenient to work with packages.",
+  "unity": "2020.1",
+  "unityRelease": "1f1",
+  "author": "RiskyBusinessGames",
+  "license": "",
+  "type": "library",
+  "publishConfig": { 
+    "registry": "https://npm.pkg.github.com/@RiskyBusinessGames/" 
+  },
+  "repository" : {
+    "type" : "git",
+    "url": "ssh://git@github.com:RiskyBusinessGames/PackageEditor-Tool.git",
+    "directory": "Assets/PackageTools"
+  }
+}
