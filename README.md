@@ -1,6 +1,16 @@
-# PackageEditor-Tool
+# Package Tools
 
 ## About
+
+## Package Initializer
+
+The Package Initializer is a editor window built using Odin Inspector, it allows for quick creation of files from within the Unity editor. The files that can be created are as follows:
+* package.json
+* README.md
+* CHANGELOG.md
+* LICENCE.md
+
+### Package Editor
 
 The Package Editor is a simple editor window built using Odin Inspector, it allows for the quick updating of a package.json file without having to leave the editor.
 
