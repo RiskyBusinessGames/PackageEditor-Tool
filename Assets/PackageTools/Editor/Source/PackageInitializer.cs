@@ -52,8 +52,6 @@ namespace RiskyBusiness.Packages.Tooling
         [DisableIf("@this._packageDirectory == string.Empty")]
         public void CreatePackageJSON()
         {
-            Debug.Log(_packageDirectory);
-
             if (_packageDirectory != string.Empty)
             {
                 var packageModel = new PackageModel
@@ -69,7 +67,7 @@ namespace RiskyBusiness.Packages.Tooling
 
                 string packageJSON = JsonUtility.ToJson(packageModel);
 
-                string packagePath = Path.Combine(_packageDirectory, $"package.json");
+                string packagePath = Path.Combine(_packageDirectory, "package.json");
 
                 bool state = EditorUtility.DisplayDialog("Create Package JSON?",
                     "Are you sure you want to create a new package file, it will override the existing package.json file.?", "Yes","No");
@@ -79,6 +77,55 @@ namespace RiskyBusiness.Packages.Tooling
                     try
                     {
                         File.WriteAllText(packagePath, packageJSON);
+                        AssetDatabase.Refresh();
+                    }
+                    catch (Exception exception)
+                    {
+                        Debug.Log($"Exception Caught when writing to file: {exception}");
+                        throw;
+                    }
+                }
+            }
+        }
+        
+        [PropertyOrder(3)]
+        [Button]
+        [DisableIf("@this._packageDirectory == string.Empty")]
+        public void CreateChangeLog()
+        {
+            CreateFile("CHANGELOG.md", "# CHANGELOG");
+        }
+        
+        [PropertyOrder(4)]
+        [Button]
+        [DisableIf("@this._packageDirectory == string.Empty")]
+        public void CreateReadMe()
+        {
+            CreateFile("README.md", "# README");
+        }
+        
+        [PropertyOrder(4)]
+        [Button]
+        [DisableIf("@this._packageDirectory == string.Empty")]
+        public void CreateLicense()
+        {
+            CreateFile("LICENSE.md", "# LICENSE");
+        }
+
+        private void CreateFile(string filename, string textToWrite)
+        {
+            if (_packageDirectory != string.Empty)
+            {
+                string packagePath = Path.Combine(_packageDirectory, filename);
+
+                bool state = EditorUtility.DisplayDialog($"Create {filename}?",
+                    "Are you sure you want to create a new {filename} file, it will override the existing {filename} file.?", "Yes","No");
+
+                if (state)
+                {
+                    try
+                    {
+                        File.WriteAllText(packagePath, textToWrite);
                         AssetDatabase.Refresh();
                     }
                     catch (Exception exception)
