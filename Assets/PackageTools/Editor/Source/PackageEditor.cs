@@ -25,7 +25,7 @@ namespace RiskyBusiness.Packages.Tooling
         private readonly int[] _versionContainer = {1, 0, 0};
         private readonly StringBuilder _stringBuilder = new StringBuilder(12);
         
-        [MenuItem("RiskyBusinessGames/Tools/Package Editor")]
+        [MenuItem("RiskyBusinessGames/Tools/Package Management/Package Editor", false, 2)]
         private static void OpenWindow()
         {
             GetWindow<PackageEditor>().Show();
@@ -272,27 +272,45 @@ namespace RiskyBusiness.Packages.Tooling
             
             // 
 
-            string applicationName = string.Empty;
+            ProcessStartInfo processStartInfo;
 #if UNITY_EDITOR_OSX
-            applicationName = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
-
+            processStartInfo = TerminalCommand(command, executingDirectory);
 #elif UNITY_EDITOR_64
-            applicationName = "cmd.exe";
-# endif
+            processStartInfo = WindowsCommand(command, executingDirectory);
+#endif
             
-            ProcessStartInfo processInfo = new ProcessStartInfo
+            Process process = Process.Start(processStartInfo);
+            process?.WaitForExit();
+        
+            LoadPackageJson();
+        }
+
+        private ProcessStartInfo TerminalCommand(string command, string executingDirectory)
+        {
+            var processInfo = new ProcessStartInfo
             {
-                FileName = applicationName,
+                FileName = "/bin/bash", //"/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+                Arguments = command,
+                WorkingDirectory = executingDirectory,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+            
+            return processInfo;
+        }
+
+        private ProcessStartInfo WindowsCommand(string command, string executingDirectory)
+        {
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
                 Arguments = $"/k {command}",
                 WorkingDirectory = executingDirectory,
                 CreateNoWindow = true,
                 UseShellExecute = false
             };
-
-            Process process = Process.Start(processInfo);
-            process?.WaitForExit();
-        
-            LoadPackageJson();
+            
+            return processInfo;
         }
 
         private string GetExecutingDirectory()

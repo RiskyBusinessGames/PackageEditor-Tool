@@ -9,7 +9,7 @@ namespace RiskyBusiness.Packages.Tooling
 {
     public class PackageInitializer : OdinEditorWindow
     {
-        [MenuItem("RiskyBusinessGames/Tools/Package Initializer")]
+        [MenuItem("RiskyBusinessGames/Tools/Package Management/Package Initializer", false, 1)]
         private static void OpenWindow()
         {
             GetWindow<PackageInitializer>().Show();
