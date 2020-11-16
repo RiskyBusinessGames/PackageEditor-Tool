@@ -17,7 +17,7 @@ namespace RiskyBusiness.Packages.Tooling
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
-        [SerializeField] private string _packageName = "";
+        [SerializeField] private string _packageName = "com.company.product";
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
@@ -25,7 +25,7 @@ namespace RiskyBusiness.Packages.Tooling
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
-        [SerializeField] private string _displayName = "";
+        [SerializeField] private string _displayName = "product name";
         
         [PropertyOrder(1)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
@@ -44,10 +44,11 @@ namespace RiskyBusiness.Packages.Tooling
         [SerializeField] private string _author = "";
         
         [PropertyOrder(2)]
-        [FolderPath(RequireExistingPath = true)]
+        [FolderPath(RequireExistingPath = true, AbsolutePath = true)]
         [SerializeField] private string _packageDirectory;
 
         [PropertyOrder(2)]
+        [PropertySpace(8)]
         [Button]
         [DisableIf("@this._packageDirectory == string.Empty")]
         public void CreatePackageJSON()
@@ -89,7 +90,8 @@ namespace RiskyBusiness.Packages.Tooling
         }
         
         [PropertyOrder(3)]
-        [Button]
+        [PropertySpace(8)]
+        [Button(ButtonSizes.Medium)]
         [DisableIf("@this._packageDirectory == string.Empty")]
         public void CreateChangeLog()
         {
@@ -97,7 +99,8 @@ namespace RiskyBusiness.Packages.Tooling
         }
         
         [PropertyOrder(4)]
-        [Button]
+        [PropertySpace(8)]
+        [Button(ButtonSizes.Medium)]
         [DisableIf("@this._packageDirectory == string.Empty")]
         public void CreateReadMe()
         {
@@ -105,13 +108,26 @@ namespace RiskyBusiness.Packages.Tooling
         }
         
         [PropertyOrder(4)]
-        [Button]
+        [PropertySpace(8)]
+        [Button(ButtonSizes.Medium)]
         [DisableIf("@this._packageDirectory == string.Empty")]
         public void CreateLicense()
         {
             CreateFile("LICENSE.md", "# LICENSE");
         }
 
+        [PropertyOrder(5)]
+        [PropertySpace(8)]
+        [Button(ButtonSizes.Large)]
+        [DisableIf("@this._packageDirectory == string.Empty")]
+        public void CreateAll()
+        {
+            CreatePackageJSON();
+            CreateChangeLog();
+            CreateReadMe();
+            CreateLicense();
+        }
+        
         private void CreateFile(string filename, string textToWrite)
         {
             if (_packageDirectory != string.Empty)
@@ -119,7 +135,7 @@ namespace RiskyBusiness.Packages.Tooling
                 string packagePath = Path.Combine(_packageDirectory, filename);
 
                 bool state = EditorUtility.DisplayDialog($"Create {filename}?",
-                    "Are you sure you want to create a new {filename} file, it will override the existing {filename} file.?", "Yes","No");
+                    $"Are you sure you want to create a new {filename} file, it will override the existing {filename} file.?", "Yes","No");
 
                 if (state)
                 {

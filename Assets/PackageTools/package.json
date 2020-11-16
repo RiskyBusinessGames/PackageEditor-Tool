@@ -1,6 +1,6 @@
 {
   "name": "com.riskybusinessgames.packagetools",
-  "version": "1.0.1",
+  "version": "2.1.0",
   "displayName": "Package Tools",
   "description": "These package tools make it more convenient to work with packages.",
   "unity": "2020.1",
@@ -17,8 +17,8 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/@riskybusinessgames/"
   },
-  "repository" : {
-    "type" : "git",
+  "repository": {
+    "type": "git",
     "url": "https://github.com/RiskyBusinessGames/PackageEditor-Tool.git",
     "directory": "Assets/PackageTools"
   }

@@ -278,10 +278,16 @@ namespace RiskyBusiness.Packages.Tooling
 #elif UNITY_EDITOR_64
             processStartInfo = WindowsCommand(command, executingDirectory);
 #endif
-            
             Process process = Process.Start(processStartInfo);
-            process?.WaitForExit();
-        
+
+            if (process != null)
+            {
+                StreamReader reader = process.StandardOutput;
+                string output = reader.ReadToEnd();
+                Debug.Log(output);
+                process.WaitForExit();
+            }
+            
             LoadPackageJson();
         }
 
@@ -292,7 +298,8 @@ namespace RiskyBusiness.Packages.Tooling
                 FileName = "/bin/bash", //"/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
                 Arguments = command,
                 WorkingDirectory = executingDirectory,
-                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                CreateNoWindow = false,
                 UseShellExecute = false
             };
             
@@ -306,6 +313,7 @@ namespace RiskyBusiness.Packages.Tooling
                 FileName = "cmd.exe",
                 Arguments = $"/k {command}",
                 WorkingDirectory = executingDirectory,
+                RedirectStandardOutput = true,
                 CreateNoWindow = true,
                 UseShellExecute = false
             };
