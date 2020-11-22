@@ -57,16 +57,18 @@ namespace RiskyBusiness.Packages.Tooling
             {
                 var packageModel = new PackageModel
                 {
-                    name = _packageName,
-                    version = _version,
-                    displayName = _displayName,
-                    description = _description,
-                    unity = _unity,
-                    unityRelease = _unityRelease,
-                    author = _author
+                    Name = _packageName,
+                    Version = _version,
+                    DisplayName = _displayName,
+                    Description = _description,
+                    Unity = _unity,
+                    UnityRelease = _unityRelease,
+                    Author = new Author { Name = _author },
+                    PublishConfig = new PublishConfig(),
+                    Repository = new Repository()
                 };
 
-                string packageJSON = JsonUtility.ToJson(packageModel);
+                string packageJSON = packageModel.ToString();
 
                 string packagePath = Path.Combine(_packageDirectory, "package.json");
 

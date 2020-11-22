@@ -47,11 +47,11 @@ namespace RiskyBusiness.Packages.Tooling
             string fileContents = File.ReadAllText(_packagePath);
             _packageModel = JsonUtility.FromJson<PackageModel>(fileContents);
             
-            _packageName = _packageModel.name;
-            _packageVersion = _packageModel.version;
-            _description = _packageModel.description;
-            _author = _packageModel.author;
-            _licence = _packageModel.license;
+            _packageName = _packageModel.Name;
+            _packageVersion = _packageModel.Version;
+            _description = _packageModel.Description;
+            _author = _packageModel.Author.Name;
+            _licence = _packageModel.License;
 
             _version = _packageVersion;
 
