@@ -44,7 +44,17 @@ namespace RiskyBusiness.Packages.Tooling
         [Button]
         public void LoadPackageJson()
         {
-            string fileContents = File.ReadAllText(_packagePath);
+            string fileContents;
+            try
+            {
+                fileContents = File.ReadAllText(_packagePath);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning($"Could not load package.json at path: {_packagePath}");
+                return;
+            }
+
             _packageModel = JsonUtility.FromJson<PackageModel>(fileContents);
             
             _packageName = _packageModel.Name;
@@ -157,7 +167,7 @@ namespace RiskyBusiness.Packages.Tooling
             }
             catch (Exception exception)
             {
-                Debug.LogError($"Couldn't load file, caught exception: {exception}");
+                Debug.LogWarning($"Could not load CHANGELOG.md at path: {_changeLogPath}");
             }
         }
         
