@@ -6,6 +6,7 @@ using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 using System.Diagnostics;
+using Newtonsoft.Json;
 using Debug = UnityEngine.Debug;
 
 namespace RiskyBusiness.Packages.Tooling
@@ -55,13 +56,16 @@ namespace RiskyBusiness.Packages.Tooling
                 return;
             }
 
-            _packageModel = JsonUtility.FromJson<PackageModel>(fileContents);
+            _packageModel = JsonConvert.DeserializeObject<PackageModel>(fileContents);
             
-            _packageName = _packageModel.Name;
-            _packageVersion = _packageModel.Version;
-            _description = _packageModel.Description;
-            _author = _packageModel.Author.Name;
-            _licence = _packageModel.License;
+            _packageName = _packageModel?.Name;
+            _packageVersion = _packageModel?.Version;
+            _description = _packageModel?.Description;
+            _author = _packageModel?.Author;
+            _authorName = _author?.Name;
+            _authorEmail = _author?.Email;
+            _authorURL = _author?.URL;
+            _licence = _packageModel?.License;
 
             _version = _packageVersion;
 
@@ -97,10 +101,22 @@ namespace RiskyBusiness.Packages.Tooling
         [ReadOnly]
         [SerializeField] private string _description;
         
-        [PropertyOrder(2)]
+        private Author _author;
+
+        [PropertyOrder(2)] 
         [BoxGroup("Package JSON Contents", centerLabel: true)] 
         [ReadOnly]
-        [SerializeField] private string _author;
+        [SerializeField] private string _authorName;
+        
+        [PropertyOrder(2)] 
+        [BoxGroup("Package JSON Contents", centerLabel: true)] 
+        [ReadOnly]
+        [SerializeField] private string _authorEmail;
+        
+        [PropertyOrder(2)] 
+        [BoxGroup("Package JSON Contents", centerLabel: true)] 
+        [ReadOnly]
+        [SerializeField] private string _authorURL;
         
         [PropertyOrder(2)]
         [BoxGroup("Package JSON Contents", centerLabel: true)] 

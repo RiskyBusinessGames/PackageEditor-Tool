@@ -19,38 +19,49 @@ namespace RiskyBusiness.Packages.Tooling
         [BoxGroup("Package JSON Contents", centerLabel: true)]
         [SerializeField] private string _packageName = "com.company.product";
         
-        [PropertyOrder(1)]
+        [PropertyOrder(2)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
         [SerializeField] private string _version = "0.0.0";
         
-        [PropertyOrder(1)]
+        [PropertyOrder(3)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
         [SerializeField] private string _displayName = "product name";
         
-        [PropertyOrder(1)]
+        [PropertyOrder(4)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
         [SerializeField] private string _description = "";
         
-        [PropertyOrder(1)]
+        [PropertyOrder(5)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
         [SerializeField] private string _unity = "2020.1";
         
-        [PropertyOrder(1)]
+        [PropertyOrder(6)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
         [SerializeField] private string _unityRelease = "1f1";
         
-        [PropertyOrder(1)]
+        [PropertyOrder(7)]
         [BoxGroup("Package JSON Contents", centerLabel: true)]
-        [SerializeField] private string _author = "";
+        [SerializeField] private string _authorName = "";
         
-        [PropertyOrder(2)]
+        [PropertyOrder(8)]
+        [BoxGroup("Package JSON Contents", centerLabel: true)]
+        [SerializeField] private string _authorEmail = "";
+        
+        [PropertyOrder(9)]
+        [BoxGroup("Package JSON Contents", centerLabel: true)]
+        [SerializeField] private string _authorURL = "";
+        
+        [PropertyOrder(10)]
+        [PropertySpace(8)]
         [FolderPath(RequireExistingPath = true, AbsolutePath = true)]
         [SerializeField] private string _packageDirectory;
 
-        [PropertyOrder(2)]
+        [PropertyOrder(11)]
         [PropertySpace(8)]
-        [Button]
-        [DisableIf("@this._packageDirectory == string.Empty")]
+        [HorizontalGroup("Split", 0.5f, LabelWidth = 20)]
+        [VerticalGroup("Split/Left")]
+        [Button(ButtonSizes.Medium)]
+        [DisableIf("@this._packageDirectory == string.Empty || this._packageDirectory == null")]
         public void CreatePackageJSON()
         {
             if (_packageDirectory != string.Empty)
@@ -63,7 +74,12 @@ namespace RiskyBusiness.Packages.Tooling
                     Description = _description,
                     Unity = _unity,
                     UnityRelease = _unityRelease,
-                    Author = new Author { Name = _author },
+                    Author = new Author
+                    {
+                        Name = _authorName,
+                        Email = _authorEmail,
+                        URL = _authorURL
+                    },
                     PublishConfig = new PublishConfig(),
                     Repository = new Repository()
                 };
@@ -91,37 +107,40 @@ namespace RiskyBusiness.Packages.Tooling
             }
         }
         
-        [PropertyOrder(3)]
+        [PropertyOrder(12)]
         [PropertySpace(8)]
+        [VerticalGroup("Split/Left")]
         [Button(ButtonSizes.Medium)]
-        [DisableIf("@this._packageDirectory == string.Empty")]
+        [DisableIf("@this._packageDirectory == string.Empty || this._packageDirectory == null")]
         public void CreateChangeLog()
         {
             CreateFile("CHANGELOG.md", "# CHANGELOG");
         }
         
-        [PropertyOrder(4)]
+        [PropertyOrder(13)]
         [PropertySpace(8)]
+        [VerticalGroup("Split/Right")]
         [Button(ButtonSizes.Medium)]
-        [DisableIf("@this._packageDirectory == string.Empty")]
+        [DisableIf("@this._packageDirectory == string.Empty || this._packageDirectory == null")]
         public void CreateReadMe()
         {
             CreateFile("README.md", "# README");
         }
         
-        [PropertyOrder(4)]
+        [PropertyOrder(14)]
         [PropertySpace(8)]
+        [VerticalGroup("Split/Right")]
         [Button(ButtonSizes.Medium)]
-        [DisableIf("@this._packageDirectory == string.Empty")]
+        [DisableIf("@this._packageDirectory == string.Empty || this._packageDirectory == null")]
         public void CreateLicense()
         {
             CreateFile("LICENSE.md", "# LICENSE");
         }
 
-        [PropertyOrder(5)]
+        [PropertyOrder(15)]
         [PropertySpace(8)]
         [Button(ButtonSizes.Large)]
-        [DisableIf("@this._packageDirectory == string.Empty")]
+        [DisableIf("@this._packageDirectory == string.Empty || this._packageDirectory == null")]
         public void CreateAll()
         {
             CreatePackageJSON();
