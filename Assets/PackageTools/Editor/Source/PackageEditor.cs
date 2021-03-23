@@ -37,7 +37,7 @@ namespace RiskyBusiness.Packages.Tooling
         [PropertyOrder(1)]
         [HorizontalGroup("Group -1"), LabelWidth(85)]
         [Sirenix.OdinInspector.FilePath(Extensions = "json")]
-        [SerializeField] private string _packagePath;
+        [SerializeField] private string _packagePath = string.Empty;
 
         [PropertyOrder(1)]
         [HorizontalGroup("Group -1"), LabelWidth(85)]
@@ -295,10 +295,8 @@ namespace RiskyBusiness.Packages.Tooling
                 Debug.LogError($"No executing directory could be created, aborting: {command}");
                 return;
             }
-            
-            // 
 
-            ProcessStartInfo processStartInfo;
+            /*ProcessStartInfo processStartInfo;
 #if UNITY_EDITOR_OSX
             processStartInfo = TerminalCommand(command, executingDirectory);
 #elif UNITY_EDITOR_64
@@ -312,12 +310,37 @@ namespace RiskyBusiness.Packages.Tooling
                 string output = reader.ReadToEnd();
                 Debug.Log(output);
                 process.WaitForExit();
-            }
+            }*/
+            
+            Command(command, executingDirectory);
             
             LoadPackageJson();
         }
 
-        private ProcessStartInfo TerminalCommand(string command, string executingDirectory)
+        private void Command(string command, string buildPath)
+        {
+            string applicationName = string.Empty;
+#if UNITY_EDITOR_OSX
+            applicationName = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal";
+
+#elif UNITY_EDITOR_64
+            applicationName = "cmd.exe";
+# endif
+            
+            ProcessStartInfo processInfo = new ProcessStartInfo
+            {
+                FileName = applicationName,
+                Arguments = $"/c {command}",
+                WorkingDirectory = buildPath,
+                CreateNoWindow = false,
+                UseShellExecute = true
+            };
+
+            Process process = Process.Start(processInfo);
+            process?.WaitForExit();
+        }
+
+        /*private ProcessStartInfo TerminalCommand(string command, string executingDirectory)
         {
             var processInfo = new ProcessStartInfo
             {
@@ -331,7 +354,7 @@ namespace RiskyBusiness.Packages.Tooling
             
             return processInfo;
         }
-
+        
         private ProcessStartInfo WindowsCommand(string command, string executingDirectory)
         {
             var processInfo = new ProcessStartInfo
@@ -345,7 +368,7 @@ namespace RiskyBusiness.Packages.Tooling
             };
             
             return processInfo;
-        }
+        }*/
 
         private string GetExecutingDirectory()
         {
